@@ -20,7 +20,7 @@ struct Node
 
 class BinarySearchTree
 {
-protected:
+private:
 	Node* root;
 
 	Node* insert(Node* root, int val)
@@ -126,7 +126,8 @@ protected:
 		inorder(root->right);
 	}
 
-	Node* remove(int val, Node* root) {
+	Node* remove(int val, Node* root)
+	{
 		Node* temp;
 
 		if (root == nullptr)
@@ -209,20 +210,16 @@ protected:
 			suc->left = todelete->left;
 			suc->left->parent = suc;
 		}
-
 	}
 
 	void destroy(Node* root)
 	{
 		if (root == nullptr)
 			return;
-		else
-		{
-			destroy(root->left);
-			destroy(root->right);
-			delete root;
-		}
-		return;
+
+		destroy(root->left);
+		destroy(root->right);
+		delete root;
 	}
 
 	int find_distance_preorder(Node* root, int key)
@@ -296,6 +293,7 @@ public:
 	BinarySearchTree()
 	{
 		root = nullptr;
+		temp = nullptr;
 	}
 
 	~BinarySearchTree()
@@ -339,13 +337,17 @@ public:
 	void remove(int key)
 	{
 		remove(key, root);
-		std::cout << "Removed successfully!\n";
 	}
 
 	void removeV2(int key)
 	{
-		Node* todel = search(key, root);
-		remove(root, todel);
+		remove(root, search(key, root));
+	}
+
+	void destroy()
+	{
+		destroy(root);
+		root = nullptr;
 	}
 
 	int find_distance_preorder(int key)
