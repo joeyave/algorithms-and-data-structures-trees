@@ -3,6 +3,7 @@
 
 int main()
 {
+	
 	BinarySearchTree bst;
 	bst.insert(18);
 	bst.insert(15);
@@ -17,6 +18,7 @@ int main()
 	bst.insert(100);
 
 	bst.display();
-
-
+	std::cout << bst.search(10) << std::endl;
+	std::cout << bst.search_preorder(10) << std::endl;	
+	std::cout << bst.search_postorder(10) << std::endl;
 }
