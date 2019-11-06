@@ -22,7 +22,7 @@ class BinarySearchTree
 {
 private:
 	Node* root;
-	size_t pathlength = 0;
+	size_t pathlength;
 
 	Node* insert(Node* root, int val)
 	{
@@ -47,14 +47,12 @@ private:
 	// Time complexity is O(h).
 	Node* search(int key, Node* root)
 	{
-		if (root == nullptr ||  key == root->val)
-		{
+		if (root == nullptr || key == root->val)
 			return root;
-		}
 
-		if (key < root->val) 
+		if (key < root->val)
 			search(key, root->left);
-		else 
+		else
 			search(key, root->right);
 	}
 
@@ -117,20 +115,9 @@ private:
 		return root;
 	}
 
-	// Preorder traversal (root -> left -> right).
-	void preorder(Node* root)
-	{
-		if (root == nullptr)
-			return;
-
-		std::cout << root->val << " ";
-		preorder(root->left);
-		preorder(root->right);
-	}
-
 	// Tree traversals.
 	//Inorder traversal (left -> root -> right).
-	void inorder(Node* root) 
+	void inorder(Node* root)
 	{
 		if (root == nullptr)
 			return;
@@ -138,17 +125,6 @@ private:
 		inorder(root->left);
 		std::cout << root->val << " ";
 		inorder(root->right);
-	}
-
-	// Postorder traversal (left -> right -> root).
-	void postorder(Node* root)
-	{
-		if (root == nullptr)
-			return;
-
-		postorder(root->left);
-		postorder(root->right);
-		std::cout << root->val << " ";
 	}
 
 	Node* remove(int val, Node* root) {
@@ -248,12 +224,34 @@ private:
 			delete root;
 		}
 		return;
-	}	
+	}
+
+	void preorder(Node* root, Node* node, size_t pathlen = 0)
+	{
+		if (root == nullptr)
+			return;
+
+		pathlen++;
+		if (root == node)
+		{
+			pathlength = pathlen;
+			return;
+		}
+
+		preorder(root->left, node, pathlen);
+		preorder(root->right, node, pathlen);
+	}
+
+	void postorder(Node* root, Node* node)
+	{
+		// TODO
+	}
 
 public:
 	BinarySearchTree()
 	{
 		root = nullptr;
+		pathlength = 0;
 	}
 
 	~BinarySearchTree()
@@ -262,12 +260,12 @@ public:
 		root = nullptr;
 	}
 
-	void insert(int val) 
+	void insert(int val)
 	{
 		root = insert(root, val);
 	}
 
-	void display() 
+	void display()
 	{
 		inorder(root);
 		std::cout << std::endl;
@@ -284,32 +282,39 @@ public:
 		iterative_search(key, root);
 	}
 
-	size_t GetPathLength()
+	size_t GetPathLength(int key)
 	{
-		return pathlength;
+		preorder(root, search(key, root));
+		size_t temp = pathlength;
 		pathlength = 0;
-	}
-	
-	int max()
-	{
-		return max(root)->val;
+		return temp;
 	}
 
-	int min()
+	size_t GetPostorderPathLength(int key)
 	{
-		return min(root)->val;
+		// TODO
 	}
 
-	void remove(int key)
-	{
-		remove(key, root);
-		std::cout << "Removed successfully!\n";
-	}
+int max()
+{
+	return max(root)->val;
+}
 
-	void removeV2(int key)
-	{
-		Node* todel = search(key, root);
-		remove(root, todel);
-	}
-};
+int min()
+{
+	return min(root)->val;
+}
+
+void remove(int key)
+{
+	remove(key, root);
+	std::cout << "Removed successfully!\n";
+}
+
+void removeV2(int key)
+{
+	Node* todel = search(key, root);
+	remove(root, todel);
+}
+	};
 

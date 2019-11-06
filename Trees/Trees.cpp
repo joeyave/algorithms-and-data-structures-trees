@@ -3,8 +3,6 @@
 
 int main()
 {
-	srand(time(nullptr));
-
 	BinarySearchTree bst;
 	bst.insert(18);
 	bst.insert(15);
@@ -12,11 +10,13 @@ int main()
 	bst.insert(10);
 	bst.insert(30);
 	bst.insert(40);
+	bst.insert(41);
+	bst.insert(42);
 	bst.insert(50);
-	bst.insert(40);
+	bst.insert(45);
 	bst.insert(100);
 
 	bst.display();
-	bst.removeV2(30);
-	bst.display();
+
+
 }
