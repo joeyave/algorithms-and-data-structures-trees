@@ -2,29 +2,29 @@
 #include <algorithm>
 #include <iostream>
 
-int get_height(Node* node)
+int get_height(Node* root)
 {
-	return node == nullptr ? 0 : node->height;
+	return root == nullptr ? 0 : root->height;
 }
 
 // An utility function to right 
-// rotate subtree rooted with y.  
+// rotate subtree rooted with y.
 Node* right_rotate(Node* y)
 {
 	Node* x = y->left;
 	Node* T2 = x->right;
 
-	// Perform rotation  
+	// Perform rotation.
 	x->right = y;
 	y->left = T2;
 
-	// Update heights  
+	// Update heights.
 	y->height = std::max(get_height(y->left),
 		get_height(y->right)) + 1;
 	x->height = std::max(get_height(x->left),
 		get_height(x->right)) + 1;
 
-	// Return new root  
+	// Return new root.
 	return x;
 }
 
@@ -35,16 +35,17 @@ Node* left_rotate(Node* x)
 	Node* y = x->right;
 	Node* T2 = y->left;
 
-	// Perform rotation  
+	// Perform rotation.
 	y->left = x;
 	x->right = T2;
 
-	// Update heights  
+	// Update heights.
 	x->height = std::max(get_height(x->left),
 		get_height(x->right)) + 1;
 	y->height = std::max(get_height(y->left),
 		get_height(y->right)) + 1;
 
+	// Return new root.
 	return y;
 }
 
@@ -296,7 +297,7 @@ int BinarySearchTree::find_distance_postorder(Node* root, int key)
 		return -1;
 
 	// Initialize distance.
-	int dist = -1;
+	auto dist = -1;
 
 	if ((dist = find_distance_postorder(root->left, key)) >= 0 ||
 		(dist = find_distance_postorder(root->right, key)) >= 0 ||
@@ -325,7 +326,7 @@ void BinarySearchTree::search_preorder(Node* root, int key)
 void BinarySearchTree::search_postorder(Node* root, int key)
 {
 	// Base case.
-	if (root == NULL)
+	if (root == nullptr)
 		return;
 
 	search_preorder(root->left, key);
