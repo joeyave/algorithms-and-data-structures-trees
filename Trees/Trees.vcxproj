@@ -151,7 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RB-tree.cpp" />
     <ClCompile Include="Trees.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RB-tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
