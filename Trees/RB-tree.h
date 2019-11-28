@@ -6,9 +6,16 @@ struct Node
 {
 	int data;
 	int color;
-	Node* left, * right, * parent;
-
-	explicit Node(int);
+	Node* left;
+	Node* right;
+	Node* parent;
+	
+	explicit Node(int data)
+	{
+		this->data = data;
+		color = RED;
+		left = right = parent = nullptr;
+	}
 };
 
 class RBTree
@@ -18,23 +25,22 @@ private:
 protected:
 	void rotateLeft(Node*&);
 	void rotateRight(Node*&);
-	void fixInsertRBTree(Node*&);
-	void fixDeleteRBTree(Node*&);
-	void inorderBST(Node*&);
-	void preorderBST(Node*&);
+	void fixInsert(Node*&);
+	void fixDelete(Node*&);
+	void inorder(Node*&);
+	void preorder(Node*&);
 	int getColor(Node*&);
 	void setColor(Node*&, int);
-	Node* minValueNode(Node*&);
-	Node* maxValueNode(Node*&);
-	Node* insertBST(Node*&, Node*&);
-	Node* deleteBST(Node*&, int);
+	Node* min(Node*&);
+	Node* max(Node*&);
+	Node* insert(Node*&, Node*&);
+	Node* remove(Node*&, int);
 	int getBlackHeight(Node*);
 	
 public:
 	RBTree();
-	void insertValue(int);
-	void deleteValue(int);
-	void merge(RBTree);
+	void insert(int);
+	void remove(int);
 	void inorder();
 	void preorder();
 };

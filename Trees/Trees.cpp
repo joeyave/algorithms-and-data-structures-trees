@@ -5,7 +5,7 @@ int main()
 {
 	RBTree rbTree;
 
-	rbTree.insertValue(15);
+	rbTree.insert(15);
 
 	rbTree.preorder();
 
