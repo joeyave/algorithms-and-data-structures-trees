@@ -37,10 +37,6 @@ Node* RBTree::insert(Node*& root, Node*& ptr)
 	return root;
 }
 
-RBTree::RBTree()
-{
-}
-
 void RBTree::insert(int n)
 {
 	Node* node = new Node(n);
@@ -92,15 +88,28 @@ void RBTree::right_rotate(Node*& ptr)
 
 void RBTree::fix_insert(Node*& ptr)
 {
+	/// 4 scenarious:
+	/// 1. ptr = root -> color black.
+	/// 2. ptr.uncle = red -> recolor.
+	/// 3. ptr.uncle = black (triangle) -> rotate ptr.parent.
+	/// 4. ptr.uncle = black (line) -> rotate ptr.grandparent.
+	
 	Node* parent = nullptr;
 	Node* grandparent = nullptr;
+
+	// Scenarious 2, 3, 4.
 	while (ptr != root && get_color(ptr) == RED && get_color(ptr->parent) == RED) 
 	{
 		parent = ptr->parent;
 		grandparent = parent->parent;
-		if (parent == grandparent->left) {
+		
+		if (parent == grandparent->left) 
+		{
 			Node* uncle = grandparent->right;
-			if (get_color(uncle) == RED) {
+
+			// Scenario 2. Recolor.
+			if (get_color(uncle) == RED)
+			{
 				set_color(uncle, BLACK);
 				set_color(parent, BLACK);
 				set_color(grandparent, RED);
@@ -108,17 +117,24 @@ void RBTree::fix_insert(Node*& ptr)
 			}
 			else
 			{
+				// If ptr is right child.
+				// Scenario 3.
 				if (ptr == parent->right)
 				{
 					left_rotate(parent);
 					ptr = parent;
 					parent = ptr->parent;
 				}
+
+				// If ptr is left child.
+				// Scenario 4.
 				right_rotate(grandparent);
 				std::swap(parent->color, grandparent->color);
 				ptr = parent;
 			}
 		}
+
+		// Everything is the same. Just symmetrically.
 		else 
 		{
 			Node* uncle = grandparent->left;
@@ -143,14 +159,18 @@ void RBTree::fix_insert(Node*& ptr)
 			}
 		}
 	}
+
+	// Scenario 1.
 	set_color(root, BLACK);
 }
 
-void RBTree::fix_delete(Node*& node) {
+void RBTree::fix_delete(Node*& node)
+{
 	if (node == nullptr)
 		return;
 
-	if (node == root) {
+	if (node == root)
+	{
 		root = nullptr;
 		return;
 	}
@@ -176,22 +196,33 @@ void RBTree::fix_delete(Node*& node) {
 			delete (node);
 		}
 	}
-	else {
+	else 
+	{
 		Node* sibling = nullptr;
 		Node* parent = nullptr;
 		Node* ptr = node;
 		set_color(ptr, DOUBLE_BLACK);
-		while (ptr != root && get_color(ptr) == DOUBLE_BLACK) {
+		while (ptr != root && get_color(ptr) == DOUBLE_BLACK) 
+		{
 			parent = ptr->parent;
-			if (ptr == parent->left) {
+			if (ptr == parent->left) 
+			{
 				sibling = parent->right;
-				if (get_color(sibling) == RED) {
+
+				// Lecture scenario 1.
+				if (get_color(sibling) == RED) 
+				{
 					set_color(sibling, BLACK);
 					set_color(parent, RED);
 					left_rotate(parent);
 				}
-				else {
-					if (get_color(sibling->left) == BLACK && get_color(sibling->right) == BLACK) {
+
+				// Lecture scenario 2. There are thee cases.
+				else 
+				{
+					// Case A.
+					if (get_color(sibling->left) == BLACK && get_color(sibling->right) == BLACK) 
+					{
 						set_color(sibling, RED);
 						if (get_color(parent) == RED)
 							set_color(parent, BLACK);
@@ -199,13 +230,18 @@ void RBTree::fix_delete(Node*& node) {
 							set_color(parent, DOUBLE_BLACK);
 						ptr = parent;
 					}
-					else {
-						if (get_color(sibling->right) == BLACK) {
+					else 
+					{
+						// Case B.
+						if (get_color(sibling->right) == BLACK) 
+						{
 							set_color(sibling->left, BLACK);
 							set_color(sibling, RED);
 							right_rotate(sibling);
 							sibling = parent->right;
 						}
+
+						// Case C.
 						set_color(sibling, parent->color);
 						set_color(parent, BLACK);
 						set_color(sibling->right, BLACK);

@@ -22,7 +22,10 @@ struct Node
 class RBTree
 {	
 public:
-	RBTree();
+	RBTree()
+	{
+	}
+	
 	void insert(int n);
 	void remove(int data);
 	void inorder();
