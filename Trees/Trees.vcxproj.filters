@@ -18,13 +18,5 @@
     <ClCompile Include="Trees.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RB-tree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="RB-tree.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
