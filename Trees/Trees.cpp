@@ -1,17 +1,16 @@
 #include "RB-tree.h"
-#include <iostream>
-
+ 
 int main()
 {
 	RBTree rb_tree;
 
-	rb_tree.insert(15);
-	rb_tree.insert(11);
-	rb_tree.insert(154);
-	rb_tree.insert(1512);
-	rb_tree.insert(152);
-	rb_tree.insert(1562);
-	rb_tree.insert(1521);
+	rb_tree.insert(10);
+	rb_tree.insert(30);
+	rb_tree.insert(20);
+	rb_tree.insert(5);
+	rb_tree.insert(7);
+	rb_tree.remove(20);
+	
 	rb_tree.preorder();
 
 	

@@ -1,5 +1,4 @@
 #include "RB-tree.h"
-#include <iomanip>
 #include <iostream>
 
 int RBTree::get_color(Node*& node)
@@ -23,12 +22,12 @@ Node* RBTree::insert(Node*& root, Node*& ptr)
 	if (root == nullptr)
 		return ptr;
 
-	if (ptr->val < root->val) 
+	if (ptr->value < root->value) 
 	{
 		root->left = insert(root->left, ptr);
 		root->left->parent = root;
 	}
-	else if (ptr->val > root->val) 
+	else if (ptr->value > root->value) 
 	{
 		root->right = insert(root->right, ptr);
 		root->right->parent = root;
@@ -37,9 +36,9 @@ Node* RBTree::insert(Node*& root, Node*& ptr)
 	return root;
 }
 
-void RBTree::insert(int n)
+void RBTree::insert(const int val)
 {
-	Node* node = new Node(n);
+	Node* node = new Node(val);
 	root = insert(root, node);
 	fix_insert(node);
 }
@@ -292,28 +291,28 @@ void RBTree::fix_delete(Node*& node)
 			node->parent->left = nullptr;
 		else
 			node->parent->right = nullptr;
-		delete(node);
+		delete node;
 		set_color(root, BLACK);
 	}
 }
 
-Node* RBTree::remove(Node*& root, int data)
+Node* RBTree::remove(Node*& root, const int data)
 {
 	if (root == nullptr)
 		return root;
 
-	if (data < root->val)
+	if (data < root->value)
 		return remove(root->left, data);
 
-	if (data > root->val)
+	if (data > root->value)
 		return remove(root->right, data);
 
 	if (root->left == nullptr || root->right == nullptr)
 		return root;
 
 	Node* temp = min(root->right);
-	root->val = temp->val;
-	return remove(root->right, temp->val);
+	root->value = temp->value;
+	return remove(root->right, temp->value);
 }
 
 void RBTree::remove(int data)
@@ -328,7 +327,7 @@ void RBTree::inorder(Node*& ptr)
 		return;
 
 	inorder(ptr->left);
-	std::cout << ptr->val << " " << ptr->color << std::endl;
+	std::cout << ptr->value << " - " << ptr->color << std::endl;
 	inorder(ptr->right);
 }
 
@@ -342,7 +341,7 @@ void RBTree::preorder(Node*& ptr)
 	if (ptr == nullptr)
 		return;
 
-	std::cout << ptr->val << " " << ptr->color << std::endl;
+	std::cout << ptr->value << " - " << ptr->color << std::endl;
 	preorder(ptr->left);
 	preorder(ptr->right);
 }
@@ -352,7 +351,7 @@ void RBTree::preorder()
 	preorder(root);
 }
 
-Node* RBTree::min(Node * root)
+Node* RBTree::min(Node *root)
 {
 	while (root->left != nullptr)
 		root = root->left;

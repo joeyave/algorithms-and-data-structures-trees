@@ -1,17 +1,18 @@
 #pragma once
+
 enum Color { RED, BLACK, DOUBLE_BLACK };
 
 struct Node
 {
-	int val;
+	int value;
 	int color;
 	Node* left;
 	Node* right;
 	Node* parent;
 	
-	explicit Node(int _val)
+	explicit Node(int val)
 	{
-		val = _val;
+		value = val;
 		color = RED;
 		left = nullptr;
 		right = nullptr;
@@ -24,9 +25,10 @@ class RBTree
 public:
 	RBTree()
 	{
+		root = nullptr;
 	}
 	
-	void insert(int n);
+	void insert(int val);
 	void remove(int data);
 	void inorder();
 	void preorder();
