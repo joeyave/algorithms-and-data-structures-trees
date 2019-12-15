@@ -1,151 +1,139 @@
-#include <iostream>
+#include <utility>
 
-struct TreapNode
+struct Node
 {
-	TreapNode(const int k, const int p)
+	int key;
+	int priority;
+
+	Node* left;
+	Node* right;
+
+	explicit Node(const int k)
 	{
 		key = k;
-		priority = p;
+		priority = rand();
 		left = right = nullptr;
 	}
 
-	int key, priority;
-	TreapNode* left;
-	TreapNode* right;
+	explicit Node(const int k, const int prior)
+	{
+		key = k;
+		priority = prior;
+		left = right = nullptr;
+	}
 };
 
 class Treap
 {
 public:
-	Treap()
-	{
-		root_ = nullptr;
-	}
+	typedef std::pair<Node*, Node*> node_pair;
 
-	TreapNode* right_rotate(TreapNode* y)
+	node_pair split(Node* root, const int key) const
 	{
-		TreapNode* x = y->left;
-		TreapNode* T2 = x->right;
-		x->right = y;
-		y->left = T2;
-		return x;
-	}
+		if (root == nullptr)
+			return node_pair(nullptr, nullptr);
 
-	TreapNode* left_rotate(TreapNode* x)
-	{
-		TreapNode* y = x->right;
-		TreapNode* T2 = y->left;
-		y->left = x;
-		x->right = T2;
-		return y;
-	}
-
-	TreapNode* insert(TreapNode* root, const int key, const int prior)
-	{
-		if (!root)
+		if (root->key < key)
 		{
-			return new TreapNode(key, prior);
+			node_pair splited_node = split(root->right, key);
+			root->right = splited_node.first;
+			return node_pair(root, splited_node.second);
+		}
+		node_pair splited_node = split(root->left, key);
+		root->left = splited_node.second;
+		return node_pair(splited_node.first, root);
+	}
+
+	node_pair split(const int key) const
+	{
+		return split(root, key);
+	}
+
+	Node* insert(Node* root, Node* node) const
+	{
+		if (root == nullptr)
+			return node;
+
+		if (root->priority < node->priority)
+		{
+			const node_pair splited_node = split(root, node->key);
+			node->left = splited_node.first;
+			node->right = splited_node.second;
+			return node;
 		}
 
-		if (key <= root->key)
+		if (root->key < node->key)
 		{
-			root->left = insert(root->left, key, prior);
-			if (root->left->priority > root->priority)
-			{
-				root = right_rotate(root);
-			}
+			root->right = insert(root->right, node);
 		}
 		else
 		{
-			root->right = insert(root->right, key, prior);
-			if (root->right->priority > root->priority)
-			{
-				root = left_rotate(root);
-			}
+			root->left = insert(root->left, node);
 		}
 		return root;
 	}
 
-	void insert(const int key, const int prior)
+	void insert(const int value)
 	{
-		root_ = insert(root_, key, prior);
+		root = insert(root, new Node(value));
 	}
 
-	TreapNode* remove(TreapNode* root, const int key)
+	void insert(const int value, const int priority)
 	{
-		if (root == nullptr)
-			return root;
-		if (key < root->key)
+		root = insert(root, new Node(value, priority));
+	}
+	
+	Node* merge(Node* a, Node* b)
+	{
+		if (a == nullptr) return b;
+		if (b == nullptr) return a;
+
+		if (a->priority > b->priority)
 		{
-			root->left = remove(root->left, key);
+			a->right = merge(a->right, b);
+			return a;
 		}
-		else if (key > root->key)
+		b->left = merge(a, b->left);
+		return b;
+	}
+
+	Node* remove(Node* root, const int key)
+	{
+		if (root == nullptr) return nullptr;
+
+		if (root->key == key)
+		{
+			Node* node = merge(root->left, root->right);
+			delete root;
+			return node;
+		}
+
+		if (root->key < key)
 		{
 			root->right = remove(root->right, key);
-		}
-		else if (root->left == nullptr)
-		{
-			TreapNode* temp = root->right;
-			delete(root);
-			root = temp;
-		}
-		else if (root->right == nullptr)
-		{
-			TreapNode* temp = root->left;
-			delete(root);
-			root = temp;
-		}
-		else if (root->left->priority < root->right->priority)
-		{
-			root = left_rotate(root);
-			root->left = remove(root->left, key);
 		}
 		else
 		{
-			root = right_rotate(root);
-			root->right = remove(root->right, key);
+			root->left = remove(root->left, key);
 		}
 		return root;
 	}
 
 	void remove(const int key)
 	{
-		remove(root_, key);
+		remove(root, key);
 	}
 
-	void display(TreapNode* root, const int level)
-	{
-		if (root)
-		{
-			display(root->left, level + 2);
-			for (int i = 0; i < level; i++)
-			{
-				std::cout << "  ";
-			}
-			std::cout << root->key << " - " << root->priority;
-			display(root->right, level + 2);
-		}
-	}
-
-	void display(const int level)
-	{
-		display(root_, level);
-	}
 private:
-	TreapNode* root_;
+	Node* root = nullptr;
 };
-
 
 int main()
 {
 	Treap treap;
-	treap.insert(15, 1);
-	treap.insert(40, 4);
-	treap.insert(30, 5);
-	treap.insert(20, 6);
-	treap.insert(50, 7);
-	treap.insert(70, 2);
-	treap.display(0);
-
-	return 0;
+	treap.insert(7, 10);
+	treap.insert(4, 6);
+	treap.insert(13, 8);
+	treap.insert(2, 4);
+	treap.insert(5, 11);
 }
